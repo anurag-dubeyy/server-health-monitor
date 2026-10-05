@@ -1,3 +1,5 @@
+import sqlite3
+from datetime import datetime 
 import psutil
 import requests
 import time
@@ -17,6 +19,7 @@ WEBSITES =  [
 CPU_LIMIT = 80
 RAM_LIMIT = 90
 DISK_LIMIT = 85
+DB_FILE = "monitor.db"
 
 def get_cpu_usage():
     return psutil.cpu_percent(interval=1)
@@ -42,6 +45,29 @@ def check_limit(name, value, limit):
         print(f"WARNING: {message}")   
         logging.warning(message) 
 
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    conn.execute(
+        """CREATE TABLE IF NOT EXISTS readings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT,
+            cpu REAL,
+            ram REAL,
+            disk REAL
+        )"""
+    )
+    conn.commit()
+    conn.close()
+
+def save_reading(cpu, ram, disk):
+    conn = sqlite3.connect(DB_FILE)
+    conn.execute(
+        "INSERT INTO readings (timestamp, cpu, ram, disk) VALUES (?, ?, ?, ?)",
+        (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), cpu, ram, disk),
+    )
+    conn.commit()
+    conn.close()
+
 def main():
     cpu = get_cpu_usage()
     ram = get_ram_usage()
@@ -52,6 +78,7 @@ def main():
     print(f"RAM: {ram}%")
     print(f"Disk: {disk}%")
     logging.info(f"CPU={cpu}% RAM={ram}% Disk={disk}%")
+    save_reading(cpu, ram, disk)
 
     check_limit("CPU", cpu, CPU_LIMIT)
     check_limit("RAM", ram, RAM_LIMIT)
@@ -66,6 +93,7 @@ def main():
         else:
             logging.error(f"{site} is {status}")    
 
+init_db()
 while True:
     main()
     time.sleep(5)  
