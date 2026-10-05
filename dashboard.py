@@ -18,6 +18,23 @@ def get_latest_readings(limit=10):
 def card(label, value, limit):
     css =  "warn" if value > limit else "ok"
     return f"<div class='card'><div class='label'>{label}</div><div class='value {css}' > {value}%</div></div>"
+def get_site_status():
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        rows = conn.execute(
+            "SELECT url, status FROM site_status "
+            "WHERE id IN (SELECT MAX(id) FROM site_status GROUP BY url)"
+        ).fetchall()
+        conn.close()
+        return rows
+    except sqlite3.OperationalError:
+        return[]
+
+def site_card(url, status):
+    css = "ok" if status == "UP" else "warn"
+    name = url.replace("https://", ""). replace("www.", "")
+    short = "UP" if status == "UP" else "DOWN"
+    return f"<div class='card' title='{status}'><div class='label'>{name}</div><div class='vlaue {css}'>{short}</div></div>"
 
 @app.route("/")
 def home():
@@ -51,6 +68,11 @@ def home():
     html += card("CPU ", latest[1], CPU_LIMIT)
     html += card("RAM ", latest[2], RAM_LIMIT)
     html += card("Disk ", latest[3], DISK_LIMIT)
+    html += "</div>"
+    html += "<h3>Websites</h3>"
+    html += "<div class='cards'>"
+    for url, status in get_site_status():
+        html += site_card(url, status)
     html += "</div>"
 
     html += "<h3>Recent Readings</h3>"

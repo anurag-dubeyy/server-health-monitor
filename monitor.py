@@ -14,6 +14,7 @@ logging.basicConfig(
 WEBSITES =  [
     "https://www.google.com",
     "https://www.github.com",
+    "https://thissitedoesnotexist12345.com",
 ]
 
 CPU_LIMIT = 80
@@ -56,6 +57,14 @@ def init_db():
             disk REAL
         )"""
     )
+    conn.execute(
+    """CREATE TABLE IF NOT EXISTS site_status (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp TEXT,
+        url TEXT,
+        status TEXT
+        )"""
+    )
     conn.commit()
     conn.close()
 
@@ -64,6 +73,14 @@ def save_reading(cpu, ram, disk):
     conn.execute(
         "INSERT INTO readings (timestamp, cpu, ram, disk) VALUES (?, ?, ?, ?)",
         (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), cpu, ram, disk),
+    )
+    conn.commit()
+    conn.close()
+def save_site_status(url, status):
+    conn = sqlite3.connect(DB_FILE)
+    conn.execute(
+        "INSERT INTO site_status (timestamp, url, status) VALUES (?, ?, ?)",
+        (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), url, status),
     )
     conn.commit()
     conn.close()
@@ -87,6 +104,7 @@ def main():
     print("--- Websites ---")
     for site in WEBSITES:
         status = check_website(site)
+        save_site_status(site, status)
         print(f"{site}: {status}")
         if status == "UP":
             logging.info(f"{site} is UP")
