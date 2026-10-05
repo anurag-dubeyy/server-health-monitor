@@ -10,3 +10,5 @@
 - Added a website up/down checker with the requests library
 - Learned try/except so the program doesn't crash when a site is down
 - Debugged a NameError (typos and a hidden folded section)
+- Added threshold warnings (CPU, RAM, disk)
+- Added logging to a file with timestamps and levels
