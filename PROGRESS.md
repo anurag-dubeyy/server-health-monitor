@@ -17,3 +17,8 @@
 - Built a Flask web dashboard with auto-refresh and a dark theme
 - Wrote a README and requirements.txt
 - Fixed a virtual environment mix-up (venv vs .venv)
+## Day 4: Linux
+- Installed WSL (Ubuntu) and learned core Linux commands
+- Cloned my project on Linux, built a venv and a secrets file
+- Debugged a 401 Unauthorized from the Telegram API
+- Ran the monitor and dashboard on Linux, managed processes with ps, kill and tail
