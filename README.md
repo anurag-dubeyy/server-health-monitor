@@ -56,8 +56,8 @@ Python, psutil, requests, SQLite, Flask, Git/GitHub
 - [x] Logging and threshold warnings
 - [x] SQLite storage
 - [x] Web dashboard
-- [ ] Website status on the dashboard
-- [ ] Telegram alerts
+- [x] Website status on the dashboard
+- [x] Telegram alerts
 - [ ] Docker container
 - [ ] CI/CD with GitHub Actions
 - [ ] Deployment on a Linux cloud server

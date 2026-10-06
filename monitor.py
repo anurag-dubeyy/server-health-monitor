@@ -21,7 +21,7 @@ WEBSITES =  [
 ]
 
 CPU_LIMIT = 80
-RAM_LIMIT = 90
+RAM_LIMIT = 5
 DISK_LIMIT = 85
 
 DB_FILE = "monitor.db"
