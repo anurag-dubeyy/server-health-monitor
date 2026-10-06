@@ -5,6 +5,9 @@ import requests
 import time
 import logging
 
+import config
+
+
 logging.basicConfig(
     filename="monitor.log",
     level=logging.INFO,
@@ -14,13 +17,17 @@ logging.basicConfig(
 WEBSITES =  [
     "https://www.google.com",
     "https://www.github.com",
-    "https://thissitedoesnotexist12345.com",
+    
 ]
 
 CPU_LIMIT = 80
 RAM_LIMIT = 90
 DISK_LIMIT = 85
+
 DB_FILE = "monitor.db"
+
+ALERT_COOLDOWN = 300
+last_alert = {}
 
 def get_cpu_usage():
     return psutil.cpu_percent(interval=1)
@@ -76,6 +83,7 @@ def save_reading(cpu, ram, disk):
     )
     conn.commit()
     conn.close()
+
 def save_site_status(url, status):
     conn = sqlite3.connect(DB_FILE)
     conn.execute(
@@ -84,6 +92,29 @@ def save_site_status(url, status):
     )
     conn.commit()
     conn.close()
+
+def send_alert(key, message):
+    now = time.time()
+    if now -  last_alert.get(key, 0 ) < ALERT_COOLDOWN:
+        return
+    last_alert[key] = now
+    try:
+        response = requests.post(
+            f"https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage",
+            data={"chat_id": config.TELEGRAM_CHAT_ID, "text": message},
+            timeout=5,
+        )
+        if response.status_code != 200:
+            logging.error(f"Telegram error: {response.text}")
+    except requests.RequestException:
+        logging.error("Could not reach Telegram")
+
+def check_limit(name, value, limit):
+    if value > limit:
+        message = f"{name} is high at {value}% (limit {limit}%)"
+        print(f"WARNING: {message}")
+        logging.warning(message)
+        send_alert(name, f"ALERT: {message}")
 
 def main():
     cpu = get_cpu_usage()
@@ -109,9 +140,11 @@ def main():
         if status == "UP":
             logging.info(f"{site} is UP")
         else:
-            logging.error(f"{site} is {status}")    
+            logging.error(f"{site} is {status}") 
+            send_alert(site, f"ALERT: {site} is {status}")   
 
 init_db()
+
 while True:
     main()
     time.sleep(5)  

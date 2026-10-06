@@ -2,3 +2,4 @@ venv/
 .venv/
 monitor.log
 monitor.db
+config.py
