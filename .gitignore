@@ -3,3 +3,4 @@ venv/
 monitor.log
 monitor.db
 config.py
+__pycache__/
