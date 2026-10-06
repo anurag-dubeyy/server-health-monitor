@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from datetime import datetime 
 import psutil
@@ -21,7 +22,7 @@ WEBSITES =  [
 ]
 
 CPU_LIMIT = 80
-RAM_LIMIT = 5
+RAM_LIMIT = 85
 DISK_LIMIT = 85
 
 DB_FILE = "monitor.db"
@@ -36,7 +37,7 @@ def get_ram_usage():
     return psutil.virtual_memory().percent  
 
 def get_disk_usage():
-    return psutil.disk_usage("C:\\").percent
+    return psutil.disk_usage(os.path.abspath(os.sep)).percent
 
 def check_website(url):
     try:
