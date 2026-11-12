@@ -25,7 +25,7 @@ CPU_LIMIT = 80
 RAM_LIMIT = 85
 DISK_LIMIT = 85
 
-DB_FILE = "monitor.db"
+DB_FILE = os.environ.get("DB_FILE","monitor.db")
 
 ALERT_COOLDOWN = 300
 last_alert = {}
@@ -144,9 +144,10 @@ def main():
             logging.error(f"{site} is {status}") 
             send_alert(site, f"ALERT: {site} is {status}")   
 
-init_db()
+if __name__ == "__main__":
+    init_db()
 
-while True:
-    main()
-    time.sleep(5)  
+    while True:
+        main()
+        time.sleep(5)  
     

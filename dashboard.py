@@ -1,8 +1,9 @@
+import os
 from flask import Flask
 import sqlite3
 
 app = Flask(__name__)
-DB_FILE = "monitor.db"
+DB_FILE = os.environ.get("DB_FILE", "monitor.db")
 CPU_LIMIT = 80
 RAM_LIMIT = 90
 DISK_LIMIT = 85
@@ -83,5 +84,9 @@ def home():
     return html
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(
+        host=os.environ.get("HOST", "127.0.0.1"),
+        port=5000,
+        debug=os.environ.get("FLASK_DEBUG", "1") =="1",
+    )
 

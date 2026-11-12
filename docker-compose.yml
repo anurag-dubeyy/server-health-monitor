@@ -1,0 +1,23 @@
+services:
+  monitor:
+    build:
+    commaand: python monitor.py
+    volumes:
+      - data:/data
+      -./config.py:/app/config.py:ro
+    restart: unless-stopped
+
+dashboard:
+  build: .
+  command: python dashboard.py
+  ports:
+    - "5000:5000"
+  environment:
+    - HOST=0.0.0.0
+    - FLASK_DEBUG=0
+  volumes:
+    - data:/data
+  restart: unless-stopped
+
+volumes:
+  data:

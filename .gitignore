@@ -4,3 +4,4 @@ monitor.log
 monitor.db
 config.py
 __pycache__/
+.pytest_cache/
