@@ -1,7 +1,8 @@
 FROM python:3.12-slim
 WORKDIR /app
 ENV PYTHONUNBUFFERED=1
-COPY requirements.txt.
+ENV DB_FILE=/data/monitor.db
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY monitor.py dashboards.py ./
+COPY monitor.py dashboard.py ./
 CMD ["python","monitor.py"]
