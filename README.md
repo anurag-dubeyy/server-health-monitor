@@ -6,6 +6,10 @@ A Python tool that monitors a machine's CPU, RAM and disk usage, checks whether 
 
 ![Dashboard](dashboard.png)
 
+   *When a monitored site goes down, its card turns red:*
+
+![Dashboard with a site down](dashboard_down.png)
+
 ## Features
 
 - Reads CPU, RAM and disk usage with `psutil`
