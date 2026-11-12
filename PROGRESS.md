@@ -22,3 +22,8 @@
 - Cloned my project on Linux, built a venv and a secrets file
 - Debugged a 401 Unauthorized from the Telegram API
 - Ran the monitor and dashboard on Linux, managed processes with ps, kill and tail
+## Docker and CI/CD
+- Containerized the monitor and dashboard with Docker Compose
+- Debugged YAML and Dockerfile typos by reading the build errors
+- Kept secrets out of the image by mounting config.py at runtime
+- Wrote tests with mocked network calls and a GitHub Actions pipeline

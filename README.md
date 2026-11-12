@@ -1,5 +1,7 @@
 # Server Health Monitor
 
+![CI](https://github.com/anurag-dubeyy/server-health-monitor/actions/workflows/ci.yml/badge.svg)
+
 A Python tool that monitors a machine's CPU, RAM and disk usage, checks whether websites are up, logs everything, stores readings in a database, and shows live results on a web dashboard.
 
 ![Dashboard](dashboard.png)
@@ -49,6 +51,19 @@ Python, psutil, requests, SQLite, Flask, Git/GitHub
 ```
 5. Open http://127.0.0.1:5000 in your browser.
 
+## Run with Docker
+
+1. Copy `config.example.py` to `config.py` and fill in your Telegram token and chat ID.
+2. Start everything:
+   ```
+   docker compose up --build -d
+   ```
+3. Open http://localhost:5000
+4. Stop it with:
+   ```
+   docker compose down
+   ```
+
 ## Roadmap
 
 - [x] System monitoring (CPU, RAM, disk)
@@ -58,8 +73,8 @@ Python, psutil, requests, SQLite, Flask, Git/GitHub
 - [x] Web dashboard
 - [x] Website status on the dashboard
 - [x] Telegram alerts
-- [ ] Docker container
-- [ ] CI/CD with GitHub Actions
+- [x] Docker container
+- [x] CI/CD with GitHub Actions
 - [ ] Deployment on a Linux cloud server
 
 ## Why I built this
